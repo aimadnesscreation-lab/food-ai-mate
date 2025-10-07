@@ -1,1 +1,4 @@
 project_id = "pwhofstkyhnqqstqsiqu"
+
+[functions.parse-food]
+verify_jwt = true
