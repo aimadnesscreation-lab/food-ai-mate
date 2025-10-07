@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Menu, Grid, MoreVertical, ChevronDown } from "lucide-react";
+import { Menu, Grid, MoreVertical, ChevronDown, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DateNavigation } from "@/components/DateNavigation";
 import { SummaryCards } from "@/components/SummaryCards";
 import { FoodLogItem } from "@/components/FoodLogItem";
 import { DailyTotals } from "@/components/DailyTotals";
 import { FoodInput } from "@/components/FoodInput";
+import { GoalsDialog } from "@/components/GoalsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
@@ -31,6 +32,7 @@ const Index = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [goalsDialogOpen, setGoalsDialogOpen] = useState(false);
   const { toast } = useToast();
 
   // Generate dates for the week
@@ -232,6 +234,9 @@ const Index = () => {
             <Button variant="ghost" size="icon">
               <Grid className="h-5 w-5" />
             </Button>
+            <Button variant="ghost" size="icon" onClick={() => setGoalsDialogOpen(true)}>
+              <Settings className="h-5 w-5" />
+            </Button>
             <Button variant="ghost" size="icon">
               <MoreVertical className="h-5 w-5" />
             </Button>
@@ -298,6 +303,17 @@ const Index = () => {
 
       {/* Food Input */}
       <FoodInput onSubmit={handleFoodInput} isLoading={isLoading} />
+
+      {/* Goals Dialog */}
+      {user && (
+        <GoalsDialog
+          open={goalsDialogOpen}
+          onOpenChange={setGoalsDialogOpen}
+          currentGoals={userGoals}
+          userId={user.id}
+          onGoalsUpdated={fetchUserGoals}
+        />
+      )}
     </div>
   );
 };
