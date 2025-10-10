@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bookmark, Image as ImageIcon, Camera, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
@@ -30,15 +30,6 @@ export const FoodInput = ({ onSubmit, isLoading }: FoodInputProps) => {
           disabled={isLoading}
           className="flex-1 bg-muted border-0 focus-visible:ring-primary"
         />
-        <Button type="button" variant="ghost" size="icon" disabled={isLoading}>
-          <Bookmark className="h-5 w-5" />
-        </Button>
-        <Button type="button" variant="ghost" size="icon" disabled={isLoading}>
-          <ImageIcon className="h-5 w-5" />
-        </Button>
-        <Button type="button" variant="ghost" size="icon" disabled={isLoading}>
-          <Camera className="h-5 w-5" />
-        </Button>
         <Button 
           type="submit" 
           disabled={!inputValue.trim() || isLoading}

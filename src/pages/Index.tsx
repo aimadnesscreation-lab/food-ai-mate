@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Menu, Grid, MoreVertical, ChevronDown, Settings } from "lucide-react";
+import { Settings, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { DateNavigation } from "@/components/DateNavigation";
 import { SummaryCards } from "@/components/SummaryCards";
 import { FoodLogItem } from "@/components/FoodLogItem";
@@ -23,6 +24,7 @@ interface FoodLog {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [foodLogs, setFoodLogs] = useState<FoodLog[]>([]);
   const [userGoals, setUserGoals] = useState({
@@ -222,24 +224,14 @@ const Index = () => {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background border-b border-border">
         <div className="flex items-center justify-between p-4">
-          <Button variant="ghost" size="icon">
-            <Menu className="h-5 w-5" />
-          </Button>
-          
-          <button className="flex items-center gap-2 text-lg font-semibold">
-            Yesterday
-            <ChevronDown className="h-4 w-4" />
-          </button>
+          <h1 className="text-xl font-semibold">AI Calorie Tracker</h1>
 
           <div className="flex gap-2">
-            <Button variant="ghost" size="icon">
-              <Grid className="h-5 w-5" />
+            <Button variant="ghost" size="icon" onClick={() => navigate('/weekly')}>
+              <BarChart3 className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" onClick={() => setGoalsDialogOpen(true)}>
               <Settings className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-5 w-5" />
             </Button>
           </div>
         </div>
