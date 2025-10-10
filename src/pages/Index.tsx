@@ -18,6 +18,7 @@ interface FoodLog {
   carbs: number;
   protein: number;
   fat: number;
+  quantity: string | null;
   logged_at: string;
 }
 
@@ -266,25 +267,22 @@ const Index = () => {
         />
 
         {/* Food Log */}
-        <Card className="mb-6">
+        <Card className="mb-6 p-4">
           {foodLogs.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               <p>No food logged yet for this day.</p>
               <p className="text-sm mt-2">Use the input below to start tracking!</p>
             </div>
           ) : (
-            <>
+            <div className="space-y-2">
               {foodLogs.map((log) => (
                 <FoodLogItem
                   key={log.id}
-                  foodName={log.food_name}
-                  calories={log.calories}
-                  carbs={log.carbs}
-                  protein={log.protein}
-                  fat={log.fat}
+                  foodLog={log}
+                  onRefresh={fetchFoodLogs}
                 />
               ))}
-            </>
+            </div>
           )}
         </Card>
 
