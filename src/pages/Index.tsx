@@ -26,6 +26,13 @@ interface FoodLog {
 const Index = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+    const today = new Date();
+    const start = new Date(today);
+    start.setDate(today.getDate() - today.getDay());
+    start.setHours(0, 0, 0, 0);
+    return start;
+  });
   const [foodLogs, setFoodLogs] = useState<FoodLog[]>([]);
   const [userGoals, setUserGoals] = useState({
     daily_calories: 2000,
@@ -39,12 +46,8 @@ const Index = () => {
   const { toast } = useToast();
 
   // Generate dates for the week
-  const generateWeekDates = () => {
+  const generateWeekDates = (startOfWeek: Date) => {
     const dates = [];
-    const today = new Date();
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
-
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + i);
@@ -57,7 +60,19 @@ const Index = () => {
     return dates;
   };
 
-  const weekDates = generateWeekDates();
+  const weekDates = generateWeekDates(currentWeekStart);
+
+  const handlePreviousWeek = () => {
+    const newWeekStart = new Date(currentWeekStart);
+    newWeekStart.setDate(currentWeekStart.getDate() - 7);
+    setCurrentWeekStart(newWeekStart);
+  };
+
+  const handleNextWeek = () => {
+    const newWeekStart = new Date(currentWeekStart);
+    newWeekStart.setDate(currentWeekStart.getDate() + 7);
+    setCurrentWeekStart(newWeekStart);
+  };
 
   useEffect(() => {
     // Check auth status
@@ -242,6 +257,8 @@ const Index = () => {
             dates={weekDates}
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
+            onPreviousWeek={handlePreviousWeek}
+            onNextWeek={handleNextWeek}
           />
         </div>
       </div>

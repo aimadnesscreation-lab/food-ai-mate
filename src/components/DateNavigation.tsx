@@ -5,9 +5,11 @@ interface DateNavigationProps {
   dates: Array<{ day: string; date: number; fullDate: Date }>;
   selectedDate: Date;
   onDateSelect: (date: Date) => void;
+  onPreviousWeek: () => void;
+  onNextWeek: () => void;
 }
 
-export const DateNavigation = ({ dates, selectedDate, onDateSelect }: DateNavigationProps) => {
+export const DateNavigation = ({ dates, selectedDate, onDateSelect, onPreviousWeek, onNextWeek }: DateNavigationProps) => {
   const isToday = (date: Date) => {
     const today = new Date();
     return date.toDateString() === today.toDateString();
@@ -27,7 +29,7 @@ export const DateNavigation = ({ dates, selectedDate, onDateSelect }: DateNaviga
 
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-      <Button variant="ghost" size="icon" className="flex-shrink-0">
+      <Button variant="ghost" size="icon" className="flex-shrink-0" onClick={onPreviousWeek}>
         <ChevronLeft className="h-4 w-4" />
       </Button>
       
@@ -58,7 +60,7 @@ export const DateNavigation = ({ dates, selectedDate, onDateSelect }: DateNaviga
         })}
       </div>
 
-      <Button variant="ghost" size="icon" className="flex-shrink-0">
+      <Button variant="ghost" size="icon" className="flex-shrink-0" onClick={onNextWeek}>
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
