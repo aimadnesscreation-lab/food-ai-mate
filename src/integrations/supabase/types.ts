@@ -53,6 +53,45 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          age: number | null
+          created_at: string
+          current_weight: number | null
+          email: string | null
+          height: number | null
+          id: string
+          name: string | null
+          profile_picture_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          current_weight?: number | null
+          email?: string | null
+          height?: number | null
+          id?: string
+          name?: string | null
+          profile_picture_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          current_weight?: number | null
+          email?: string | null
+          height?: number | null
+          id?: string
+          name?: string | null
+          profile_picture_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_goals: {
         Row: {
           created_at: string
@@ -83,6 +122,30 @@ export type Database = {
           id?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      weight_logs: {
+        Row: {
+          created_at: string
+          id: string
+          logged_at: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          user_id: string
+          weight: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          user_id?: string
+          weight?: number
         }
         Relationships: []
       }

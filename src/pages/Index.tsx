@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings, BarChart3 } from "lucide-react";
+import { Settings, BarChart3, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { DateNavigation } from "@/components/DateNavigation";
@@ -11,6 +11,7 @@ import { GoalsDialog } from "@/components/GoalsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface FoodLog {
   id: string;
@@ -239,7 +240,12 @@ const Index = () => {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background border-b border-border">
         <div className="flex items-center justify-between p-4">
-          <h1 className="text-xl font-semibold">AI Calorie Tracker</h1>
+          <div className="flex items-center gap-2">
+            <SidebarTrigger>
+              <Menu className="h-5 w-5" />
+            </SidebarTrigger>
+            <h1 className="text-xl font-semibold">AI Calorie Tracker</h1>
+          </div>
 
           <div className="flex gap-2">
             <Button variant="ghost" size="icon" onClick={() => navigate('/weekly')}>

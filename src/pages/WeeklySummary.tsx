@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Progress } from "@/components/ui/progress";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface DailySummary {
   date: string;
@@ -152,6 +153,9 @@ const WeeklySummary = () => {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background border-b border-border">
         <div className="flex items-center gap-4 p-4">
+          <SidebarTrigger>
+            <Menu className="h-5 w-5" />
+          </SidebarTrigger>
           <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
