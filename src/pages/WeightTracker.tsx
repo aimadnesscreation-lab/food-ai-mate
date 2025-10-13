@@ -96,19 +96,19 @@ const WeightTracker = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background max-w-full overflow-x-hidden">
       <div className="container mx-auto p-4 max-w-4xl">
         <div className="flex items-center gap-4 mb-6">
           <SidebarTrigger>
             <Menu className="h-6 w-6" />
           </SidebarTrigger>
-          <h1 className="text-2xl font-bold">Weight Tracker</h1>
+          <h1 className="text-2xl font-bold text-foreground">Weight Tracker</h1>
         </div>
 
         <div className="grid gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Log Your Weight</CardTitle>
+          <Card className="border-primary/20">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-primary">Log Your Weight</CardTitle>
               <CardDescription>Track your weight progress over time</CardDescription>
             </CardHeader>
             <CardContent>
@@ -123,7 +123,7 @@ const WeightTracker = () => {
                     placeholder="70"
                   />
                 </div>
-                <Button onClick={handleAddWeight} className="self-end">
+                <Button onClick={handleAddWeight} className="self-end bg-primary hover:bg-primary/90">
                   Add Weight
                 </Button>
               </div>
@@ -131,9 +131,9 @@ const WeightTracker = () => {
           </Card>
 
           {weightLogs.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Weight Progress</CardTitle>
+            <Card className="border-primary/20">
+              <CardHeader className="bg-primary/5">
+                <CardTitle className="text-primary">Weight Progress</CardTitle>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -149,9 +149,9 @@ const WeightTracker = () => {
             </Card>
           )}
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Weight History</CardTitle>
+          <Card className="border-primary/20">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-primary">Weight History</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -164,7 +164,7 @@ const WeightTracker = () => {
                     .map((log) => (
                       <div
                         key={log.id}
-                        className="flex items-center justify-between p-3 bg-accent rounded-lg"
+                        className="flex items-center justify-between p-3 bg-primary/10 border border-primary/20 rounded-lg"
                       >
                         <div>
                           <p className="font-medium">{log.weight} kg</p>

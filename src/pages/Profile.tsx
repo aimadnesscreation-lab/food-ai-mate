@@ -85,18 +85,18 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background max-w-full overflow-x-hidden">
       <div className="container mx-auto p-4 max-w-2xl">
         <div className="flex items-center gap-4 mb-6">
           <SidebarTrigger>
             <Menu className="h-6 w-6" />
           </SidebarTrigger>
-          <h1 className="text-2xl font-bold">Profile</h1>
+          <h1 className="text-2xl font-bold text-foreground">Profile</h1>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Information</CardTitle>
+        <Card className="border-primary/20">
+          <CardHeader className="bg-primary/5">
+            <CardTitle className="text-primary">Your Information</CardTitle>
             <CardDescription>Manage your personal information</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -160,7 +160,7 @@ const Profile = () => {
               />
             </div>
 
-            <Button onClick={handleSave} disabled={loading} className="w-full">
+            <Button onClick={handleSave} disabled={loading} className="w-full bg-primary hover:bg-primary/90">
               {loading ? "Saving..." : "Save Profile"}
             </Button>
           </CardContent>

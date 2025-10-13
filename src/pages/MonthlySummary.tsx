@@ -86,48 +86,48 @@ const MonthlySummary = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background max-w-full overflow-x-hidden">
       <div className="container mx-auto p-4 max-w-4xl">
         <div className="flex items-center gap-4 mb-6">
           <SidebarTrigger>
             <Menu className="h-6 w-6" />
           </SidebarTrigger>
-          <h1 className="text-2xl font-bold">Monthly Summary</h1>
+          <h1 className="text-2xl font-bold text-foreground">Monthly Summary</h1>
         </div>
 
         <div className="grid gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Monthly Averages</CardTitle>
+          <Card className="border-primary/20">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-primary">Monthly Averages</CardTitle>
               <CardDescription>
                 Average daily intake for {format(new Date(), "MMMM yyyy")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-4 bg-accent rounded-lg">
-                  <p className="text-2xl font-bold">{averages.calories}</p>
+                <div className="text-center p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                  <p className="text-2xl font-bold text-primary">{averages.calories}</p>
                   <p className="text-sm text-muted-foreground">Calories</p>
                 </div>
-                <div className="text-center p-4 bg-accent rounded-lg">
-                  <p className="text-2xl font-bold">{averages.protein}g</p>
+                <div className="text-center p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                  <p className="text-2xl font-bold text-primary">{averages.protein}g</p>
                   <p className="text-sm text-muted-foreground">Protein</p>
                 </div>
-                <div className="text-center p-4 bg-accent rounded-lg">
-                  <p className="text-2xl font-bold">{averages.carbs}g</p>
+                <div className="text-center p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                  <p className="text-2xl font-bold text-primary">{averages.carbs}g</p>
                   <p className="text-sm text-muted-foreground">Carbs</p>
                 </div>
-                <div className="text-center p-4 bg-accent rounded-lg">
-                  <p className="text-2xl font-bold">{averages.fat}g</p>
+                <div className="text-center p-4 bg-primary/10 border border-primary/20 rounded-lg">
+                  <p className="text-2xl font-bold text-primary">{averages.fat}g</p>
                   <p className="text-sm text-muted-foreground">Fat</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Daily Breakdown</CardTitle>
+          <Card className="border-primary/20">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-primary">Daily Breakdown</CardTitle>
               <CardDescription>Days with logged food this month</CardDescription>
             </CardHeader>
             <CardContent>
@@ -140,7 +140,7 @@ const MonthlySummary = () => {
                     .map((day) => (
                       <div
                         key={day.date}
-                        className="p-3 bg-accent rounded-lg"
+                        className="p-3 bg-primary/10 border border-primary/20 rounded-lg"
                       >
                         <div className="flex justify-between items-center mb-2">
                           <p className="font-medium">

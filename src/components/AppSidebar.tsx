@@ -1,4 +1,4 @@
-import { Calculator, TrendingUp, Calendar, Apple, User, LogOut, Menu } from "lucide-react";
+import { Calculator, TrendingUp, Calendar, Apple, User, LogOut, Home } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const menuItems = [
+  { title: "Home", url: "/", icon: Home },
   { title: "BMI Calculator", url: "/bmi-calculator", icon: Calculator },
   { title: "Weight Tracker", url: "/weight-tracker", icon: TrendingUp },
   { title: "Monthly Summary", url: "/monthly-summary", icon: Calendar },
@@ -45,7 +46,7 @@ export function AppSidebar() {
     <Sidebar className={state === "collapsed" ? "w-14" : "w-60"} collapsible="icon">
       <SidebarTrigger className="m-2 self-end" />
 
-      <SidebarContent>
+      <SidebarContent className="bg-card">
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>

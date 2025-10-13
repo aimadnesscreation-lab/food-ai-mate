@@ -62,18 +62,18 @@ const BMICalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background max-w-full overflow-x-hidden">
       <div className="container mx-auto p-4 max-w-2xl">
         <div className="flex items-center gap-4 mb-6">
           <SidebarTrigger>
             <Menu className="h-6 w-6" />
           </SidebarTrigger>
-          <h1 className="text-2xl font-bold">BMI Calculator</h1>
+          <h1 className="text-2xl font-bold text-foreground">BMI Calculator</h1>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Calculate Your Daily Calorie Needs</CardTitle>
+        <Card className="border-primary/20">
+          <CardHeader className="bg-primary/5">
+            <CardTitle className="text-primary">Calculate Your Daily Calorie Needs</CardTitle>
             <CardDescription>
               Enter your information to calculate BMI and daily calorie requirements
             </CardDescription>
@@ -171,13 +171,13 @@ const BMICalculator = () => {
               </RadioGroup>
             </div>
 
-            <Button onClick={calculateBMI} className="w-full">
+            <Button onClick={calculateBMI} className="w-full bg-primary hover:bg-primary/90">
               Calculate
             </Button>
 
             {results && (
-              <div className="mt-6 p-4 bg-accent rounded-lg space-y-2">
-                <h3 className="font-semibold text-lg">Results</h3>
+              <div className="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-lg space-y-2">
+                <h3 className="font-semibold text-lg text-primary">Results</h3>
                 <p>
                   <strong>BMI:</strong> {results.bmi} ({results.category})
                 </p>
