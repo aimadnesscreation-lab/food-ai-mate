@@ -50,6 +50,16 @@ All colors MUST be HSL.
     --date-active: 142 71% 45%;
     --date-past: 6 93% 80%;
     --date-inactive: 0 0% 95%;
+
+    /* Sidebar theme tokens */
+    --sidebar-background: var(--card);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--muted);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
   }
 }
 

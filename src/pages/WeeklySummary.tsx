@@ -151,7 +151,7 @@ const WeeklySummary = () => {
   return (
     <div className="min-h-screen bg-background pb-8 max-w-full overflow-x-hidden">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-background border-b border-border">
+      <div className="sticky top-0 bg-background border-b border-border">
         <div className="flex items-center gap-4 p-4">
           <SidebarTrigger>
             <Menu className="h-5 w-5" />
