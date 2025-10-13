@@ -43,12 +43,14 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={state === "collapsed" ? "w-14" : "w-60"} collapsible="icon">
-      <SidebarTrigger className="m-2 self-end" />
+    <Sidebar className={state === "collapsed" ? "w-14 bg-card" : "w-60 bg-card"} collapsible="icon">
+      <div className="bg-card p-2 border-b border-border">
+        <SidebarTrigger />
+      </div>
 
       <SidebarContent className="bg-card">
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-foreground font-semibold">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -58,21 +60,21 @@ export function AppSidebar() {
                       to={item.url}
                       className={({ isActive }) =>
                         isActive
-                          ? "bg-accent text-accent-foreground font-medium"
-                          : "hover:bg-accent/50"
+                          ? "bg-primary text-primary-foreground font-medium flex items-center"
+                          : "hover:bg-primary/10 text-foreground flex items-center"
                       }
                     >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {state !== "collapsed" && <span>{item.title}</span>}
+                      <item.icon className="h-4 w-4" />
+                      {state !== "collapsed" && <span className="ml-2">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
               
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  {state !== "collapsed" && <span>Logout</span>}
+                <SidebarMenuButton onClick={handleLogout} className="text-foreground hover:bg-primary/10 flex items-center">
+                  <LogOut className="h-4 w-4" />
+                  {state !== "collapsed" && <span className="ml-2">Logout</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
