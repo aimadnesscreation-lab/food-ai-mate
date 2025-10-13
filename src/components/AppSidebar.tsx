@@ -43,12 +43,12 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={state === "collapsed" ? "w-14 bg-card" : "w-60 bg-card"} collapsible="icon">
-      <div className="bg-card p-2 border-b border-border">
+    <Sidebar className={state === "collapsed" ? "w-14 bg-transparent" : "w-60 bg-transparent"} collapsible="icon">
+      <div className="bg-transparent p-2">
         <SidebarTrigger />
       </div>
 
-      <SidebarContent className="bg-card">
+      <SidebarContent className="bg-transparent">
         <SidebarGroup>
           <SidebarGroupLabel className="text-foreground font-semibold">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -60,7 +60,7 @@ export function AppSidebar() {
                       to={item.url}
                       className={({ isActive }) =>
                         isActive
-                          ? "bg-primary text-primary-foreground font-medium flex items-center"
+                          ? "bg-primary/20 text-foreground font-medium flex items-center"
                           : "hover:bg-primary/10 text-foreground flex items-center"
                       }
                     >
