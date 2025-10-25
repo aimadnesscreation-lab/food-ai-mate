@@ -12,7 +12,6 @@ import WeeklySummary from "./pages/WeeklySummary";
 import BMICalculator from "./pages/BMICalculator";
 import WeightTracker from "./pages/WeightTracker";
 import MonthlySummary from "./pages/MonthlySummary";
-import Micronutrients from "./pages/Micronutrients";
 import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
@@ -34,7 +33,6 @@ const App = () => (
                 <Route path="/bmi-calculator" element={<BMICalculator />} />
                 <Route path="/weight-tracker" element={<WeightTracker />} />
                 <Route path="/monthly-summary" element={<MonthlySummary />} />
-                <Route path="/micronutrients" element={<Micronutrients />} />
                 <Route path="/profile" element={<Profile />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

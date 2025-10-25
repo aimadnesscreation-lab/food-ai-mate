@@ -61,13 +61,15 @@ const Profile = () => {
 
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        user_id: user.id,
         name: profile.name,
         age: profile.age,
         height: profile.height,
         current_weight: profile.current_weight,
-      })
-      .eq("user_id", user.id);
+      }, {
+        onConflict: 'user_id'
+      });
 
     if (error) {
       toast({

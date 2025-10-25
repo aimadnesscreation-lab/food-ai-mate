@@ -20,7 +20,6 @@ const menuItems = [
   { title: "BMI Calculator", url: "/bmi-calculator", icon: Calculator },
   { title: "Weight Tracker", url: "/weight-tracker", icon: TrendingUp },
   { title: "Monthly Summary", url: "/monthly-summary", icon: Calendar },
-  { title: "Micronutrient Tracker", url: "/micronutrients", icon: Apple },
   { title: "Profile", url: "/profile", icon: User },
 ];
 
