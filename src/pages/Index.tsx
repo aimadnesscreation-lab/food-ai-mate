@@ -171,6 +171,12 @@ const Index = () => {
         protein: item.protein,
         fat: item.fat,
         quantity: item.quantity,
+        vitamin_a: item.vitamin_a || 0,
+        vitamin_c: item.vitamin_c || 0,
+        vitamin_d: item.vitamin_d || 0,
+        calcium: item.calcium || 0,
+        iron: item.iron || 0,
+        fiber: item.fiber || 0,
         logged_at: selectedDate.toISOString(),
       }));
 

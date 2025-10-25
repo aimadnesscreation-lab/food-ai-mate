@@ -30,7 +30,13 @@ Return ONLY a JSON array of food items with this exact structure:
     "carbs": number,
     "protein": number,
     "fat": number,
-    "quantity": "serving size description"
+    "quantity": "serving size description",
+    "vitamin_a": number (mcg RAE),
+    "vitamin_c": number (mg),
+    "vitamin_d": number (mcg),
+    "calcium": number (mg),
+    "iron": number (mg),
+    "fiber": number (g)
   }
 ]
 
@@ -38,11 +44,12 @@ Rules:
 - Use standard nutritional values per serving
 - If quantity not specified, assume standard serving
 - Return multiple items if multiple foods mentioned
-- Be accurate with nutritional values
+- Be accurate with nutritional and micronutrient values
 - Include the quantity in food_name (e.g., "Roti (2 rotis)", "Egg omelette (2 eggs)")
+- Provide micronutrient values based on standard food databases
 
 Example input: "I ate 2 rotis and an omelette with 2 eggs"
-Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protein":6,"fat":2,"quantity":"2 rotis"},{"food_name":"Egg omelette (2 eggs)","calories":180,"carbs":2,"protein":12,"fat":14,"quantity":"2 eggs"}]`;
+Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protein":6,"fat":2,"quantity":"2 rotis","vitamin_a":0,"vitamin_c":0,"vitamin_d":0,"calcium":20,"iron":2.4,"fiber":4},{"food_name":"Egg omelette (2 eggs)","calories":180,"carbs":2,"protein":12,"fat":14,"quantity":"2 eggs","vitamin_a":260,"vitamin_c":0,"vitamin_d":2,"calcium":56,"iron":1.8,"fiber":0}]`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GOOGLE_API_KEY}`, {
       method: 'POST',

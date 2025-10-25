@@ -16,40 +16,58 @@ export type Database = {
     Tables: {
       food_logs: {
         Row: {
+          calcium: number | null
           calories: number
           carbs: number
           created_at: string
           fat: number
+          fiber: number | null
           food_name: string
           id: string
+          iron: number | null
           logged_at: string
           protein: number
           quantity: string | null
           user_id: string
+          vitamin_a: number | null
+          vitamin_c: number | null
+          vitamin_d: number | null
         }
         Insert: {
+          calcium?: number | null
           calories: number
           carbs: number
           created_at?: string
           fat: number
+          fiber?: number | null
           food_name: string
           id?: string
+          iron?: number | null
           logged_at?: string
           protein: number
           quantity?: string | null
           user_id: string
+          vitamin_a?: number | null
+          vitamin_c?: number | null
+          vitamin_d?: number | null
         }
         Update: {
+          calcium?: number | null
           calories?: number
           carbs?: number
           created_at?: string
           fat?: number
+          fiber?: number | null
           food_name?: string
           id?: string
+          iron?: number | null
           logged_at?: string
           protein?: number
           quantity?: string | null
           user_id?: string
+          vitamin_a?: number | null
+          vitamin_c?: number | null
+          vitamin_d?: number | null
         }
         Relationships: []
       }

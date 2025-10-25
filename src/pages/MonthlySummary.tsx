@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Menu } from "lucide-react";
+import { Menu, ChevronLeft, ChevronRight } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { startOfMonth, endOfMonth, eachDayOfInterval, format } from "date-fns";
+import { startOfMonth, endOfMonth, eachDayOfInterval, format, addMonths, subMonths } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 interface DailyTotal {
   date: string;
@@ -17,19 +18,60 @@ interface DailyTotal {
 const MonthlySummary = () => {
   const [monthlyData, setMonthlyData] = useState<DailyTotal[]>([]);
   const [averages, setAverages] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+  const [currentMonthOffset, setCurrentMonthOffset] = useState(0); // 0 = current month
+  const [firstLogDate, setFirstLogDate] = useState<Date | null>(null);
+  const [totalMonths, setTotalMonths] = useState(0);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchMonthlyData();
+    fetchFirstLogDate();
   }, []);
+
+  useEffect(() => {
+    if (firstLogDate) {
+      fetchMonthlyData();
+    }
+  }, [firstLogDate, currentMonthOffset]);
+
+  const fetchFirstLogDate = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('food_logs')
+      .select('logged_at')
+      .eq('user_id', user.id)
+      .order('logged_at', { ascending: true })
+      .limit(1);
+
+    if (!error && data && data.length > 0) {
+      const firstDate = new Date(data[0].logged_at);
+      const startOfFirstMonth = startOfMonth(firstDate);
+      setFirstLogDate(startOfFirstMonth);
+
+      // Calculate total months from first log to now
+      const now = new Date();
+      const monthsDiff = (now.getFullYear() - startOfFirstMonth.getFullYear()) * 12 + 
+                        (now.getMonth() - startOfFirstMonth.getMonth()) + 1;
+      setTotalMonths(monthsDiff);
+    }
+  };
+
+  const getMonthBoundaries = () => {
+    if (!firstLogDate) return { start: new Date(), end: new Date() };
+
+    const targetMonth = subMonths(new Date(), currentMonthOffset);
+    const monthStart = startOfMonth(targetMonth);
+    const monthEnd = endOfMonth(targetMonth);
+
+    return { start: monthStart, end: monthEnd };
+  };
 
   const fetchMonthlyData = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const now = new Date();
-    const monthStart = startOfMonth(now);
-    const monthEnd = endOfMonth(now);
+    const { start: monthStart, end: monthEnd } = getMonthBoundaries();
 
     const { data, error } = await supabase
       .from("food_logs")
@@ -95,12 +137,42 @@ const MonthlySummary = () => {
           <h1 className="text-2xl font-bold text-foreground">Monthly Summary</h1>
         </div>
 
+        {/* Month Navigation */}
+        {firstLogDate && (
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentMonthOffset(prev => prev + 1)}
+              disabled={currentMonthOffset >= totalMonths - 1}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous Month
+            </Button>
+            
+            <div className="text-sm font-medium">
+              {format(getMonthBoundaries().start, "MMMM yyyy")}
+              {currentMonthOffset === 0 && " (Current)"}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentMonthOffset(prev => Math.max(0, prev - 1))}
+              disabled={currentMonthOffset === 0}
+            >
+              Next Month
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        )}
+
         <div className="grid gap-6">
           <Card className="border-primary/20">
             <CardHeader className="bg-primary/5">
               <CardTitle className="text-primary">Monthly Averages</CardTitle>
               <CardDescription>
-                Average daily intake for {format(new Date(), "MMMM yyyy")}
+                Average daily intake for {format(getMonthBoundaries().start, "MMMM yyyy")}
               </CardDescription>
             </CardHeader>
             <CardContent>
