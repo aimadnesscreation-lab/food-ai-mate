@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft, Menu, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,9 @@ const WeeklySummary = () => {
   });
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentWeekOffset, setCurrentWeekOffset] = useState(0); // 0 = current week, 1 = previous week, etc.
+  const [firstLogDate, setFirstLogDate] = useState<Date | null>(null);
+  const [totalWeeks, setTotalWeeks] = useState(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -42,9 +45,15 @@ const WeeklySummary = () => {
   useEffect(() => {
     if (user) {
       fetchUserGoals();
-      fetchWeeklySummary();
+      fetchFirstLogDate();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user && firstLogDate) {
+      fetchWeeklySummary();
+    }
+  }, [user, firstLogDate, currentWeekOffset]);
 
   const fetchUserGoals = async () => {
     const { data, error } = await supabase
@@ -58,18 +67,56 @@ const WeeklySummary = () => {
     }
   };
 
+  const fetchFirstLogDate = async () => {
+    const { data, error } = await supabase
+      .from('food_logs')
+      .select('logged_at')
+      .eq('user_id', user.id)
+      .order('logged_at', { ascending: true })
+      .limit(1);
+
+    if (!error && data && data.length > 0) {
+      const firstDate = new Date(data[0].logged_at);
+      // Set to start of week (Sunday)
+      const dayOfWeek = firstDate.getDay();
+      const startOfWeek = new Date(firstDate);
+      startOfWeek.setDate(firstDate.getDate() - dayOfWeek);
+      startOfWeek.setHours(0, 0, 0, 0);
+      setFirstLogDate(startOfWeek);
+
+      // Calculate total weeks from first log to now
+      const now = new Date();
+      const diffTime = Math.abs(now.getTime() - startOfWeek.getTime());
+      const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+      setTotalWeeks(diffWeeks);
+    }
+  };
+
+  const getWeekBoundaries = () => {
+    if (!firstLogDate) return { start: new Date(), end: new Date() };
+
+    const weeksFromStart = totalWeeks - currentWeekOffset - 1;
+    const weekStart = new Date(firstLogDate);
+    weekStart.setDate(firstLogDate.getDate() + (weeksFromStart * 7));
+    weekStart.setHours(0, 0, 0, 0);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+
+    return { start: weekStart, end: weekEnd };
+  };
+
   const fetchWeeklySummary = async () => {
     setIsLoading(true);
-    const today = new Date();
-    const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(today.getDate() - 6);
-    sevenDaysAgo.setHours(0, 0, 0, 0);
+    const { start, end } = getWeekBoundaries();
 
     const { data, error } = await supabase
       .from('food_logs')
       .select('*')
       .eq('user_id', user.id)
-      .gte('logged_at', sevenDaysAgo.toISOString())
+      .gte('logged_at', start.toISOString())
+      .lte('logged_at', end.toISOString())
       .order('logged_at', { ascending: true });
 
     if (error) {
@@ -161,6 +208,36 @@ const WeeklySummary = () => {
           </Button>
           <h1 className="text-xl font-semibold">Weekly Summary</h1>
         </div>
+        
+        {/* Week Navigation */}
+        {firstLogDate && (
+          <div className="flex items-center justify-between px-4 pb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentWeekOffset(prev => prev + 1)}
+              disabled={currentWeekOffset >= totalWeeks - 1}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Previous Week
+            </Button>
+            
+            <div className="text-sm font-medium">
+              Week {totalWeeks - currentWeekOffset}
+              {currentWeekOffset === 0 && " (Current)"}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentWeekOffset(prev => Math.max(0, prev - 1))}
+              disabled={currentWeekOffset === 0}
+            >
+              Next Week
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="p-4 max-w-4xl mx-auto">
