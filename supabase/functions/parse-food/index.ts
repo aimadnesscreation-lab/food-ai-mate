@@ -105,6 +105,11 @@ Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protei
 
     const response = await makeApiCall();
 
+    if (!response.ok) {
+      // Propagate the error response (e.g., 429/503) to the client
+      return response;
+    }
+
     const data = await response.json();
     const content = data.candidates[0].content.parts[0].text;
     
