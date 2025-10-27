@@ -10,7 +10,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const makeApiCall = async (attempt = 1): Promise<Response> => {
+  const makeApiCall = async (prompt: string, attempt = 1): Promise<Response> => {
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY');
 
     if (!GOOGLE_API_KEY) {
@@ -85,7 +85,7 @@ Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protei
           const delay = Math.pow(2, attempt) * 1000;
           console.log(`Service overloaded, retrying in ${delay}ms...`);
           await new Promise(resolve => setTimeout(resolve, delay));
-          return makeApiCall(attempt + 1);
+          return makeApiCall(prompt, attempt + 1);
         }
         return new Response(
           JSON.stringify({ error: 'Service temporarily unavailable. Please try again in a moment.' }),
@@ -103,7 +103,7 @@ Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protei
     const { prompt } = await req.json();
     console.log('Parsing food input:', prompt);
 
-    const response = await makeApiCall();
+    const response = await makeApiCall(prompt);
 
     if (!response.ok) {
       // Propagate the error response (e.g., 429/503) to the client
