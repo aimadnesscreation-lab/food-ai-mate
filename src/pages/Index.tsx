@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Settings, BarChart3, Menu } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Settings, BarChart3, Menu, Download, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { DateNavigation } from "@/components/DateNavigation";
@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { exportFoodLogsToCSV, importFoodLogsFromCSV } from "@/lib/csvUtils";
 
 interface FoodLog {
   id: string;
@@ -45,6 +46,7 @@ const Index = () => {
   const [user, setUser] = useState(null);
   const [goalsDialogOpen, setGoalsDialogOpen] = useState(false);
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Generate dates for the week
   const generateWeekDates = (startOfWeek: Date) => {
@@ -219,6 +221,49 @@ const Index = () => {
   const totals = calculateTotals();
   const remainingCalories = userGoals.daily_calories - totals.calories;
 
+  const handleExportCSV = async () => {
+    try {
+      await exportFoodLogsToCSV(user.id);
+      toast({
+        title: "Export successful",
+        description: "Your food logs have been exported to CSV",
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Export failed",
+        description: error.message || "Failed to export food logs",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleImportCSV = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const count = await importFoodLogsFromCSV(file, user.id);
+      toast({
+        title: "Import successful",
+        description: `Imported ${count} food log(s)`,
+      });
+      fetchFoodLogs();
+    } catch (error) {
+      console.error('Import error:', error);
+      toast({
+        title: "Import failed",
+        description: error.message || "Failed to import food logs",
+        variant: "destructive",
+      });
+    } finally {
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -254,6 +299,19 @@ const Index = () => {
           </div>
 
           <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={handleExportCSV} title="Export to CSV">
+              <Download className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => fileInputRef.current?.click()} title="Import from CSV">
+              <Upload className="h-5 w-5" />
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleImportCSV}
+              className="hidden"
+            />
             <Button variant="ghost" size="icon" onClick={() => navigate('/weekly')}>
               <BarChart3 className="h-5 w-5" />
             </Button>
