@@ -20,9 +20,9 @@ serve(async (req) => {
 
     console.log('Parsing food input:', prompt);
 
-    const systemPrompt = `You are a nutritional analysis AI. Parse food descriptions and return nutritional data in JSON format.
+    const systemPrompt = `You are a nutritional analysis AI. Parse food and exercise descriptions and return data in JSON format.
 
-Return ONLY a JSON array of food items with this exact structure:
+Return ONLY a JSON array of items with this exact structure:
 [
   {
     "food_name": "descriptive name with quantity",
@@ -40,16 +40,27 @@ Return ONLY a JSON array of food items with this exact structure:
   }
 ]
 
-Rules:
+Rules for FOOD:
 - Use standard nutritional values per serving
 - If quantity not specified, assume standard serving
 - Return multiple items if multiple foods mentioned
 - Be accurate with nutritional and micronutrient values
 - Include the quantity in food_name (e.g., "Roti (2 rotis)", "Egg omelette (2 eggs)")
 - Provide micronutrient values based on standard food databases
+- Calories should be POSITIVE
 
-Example input: "I ate 2 rotis and an omelette with 2 eggs"
-Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protein":6,"fat":2,"quantity":"2 rotis","vitamin_a":0,"vitamin_c":0,"vitamin_d":0,"calcium":20,"iron":2.4,"fiber":4},{"food_name":"Egg omelette (2 eggs)","calories":180,"carbs":2,"protein":12,"fat":14,"quantity":"2 eggs","vitamin_a":260,"vitamin_c":0,"vitamin_d":2,"calcium":56,"iron":1.8,"fiber":0}]`;
+Rules for EXERCISE:
+- Detect exercise activities (running, walking, gym, cycling, swimming, etc.)
+- Return NEGATIVE calories (calories burned)
+- Set all macros (carbs, protein, fat) to 0
+- Set all micronutrients to 0
+- Include duration/intensity in food_name (e.g., "Running (30 minutes)", "Gym workout (1 hour)")
+
+Example food input: "I ate 2 rotis and an omelette with 2 eggs"
+Example food output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protein":6,"fat":2,"quantity":"2 rotis","vitamin_a":0,"vitamin_c":0,"vitamin_d":0,"calcium":20,"iron":2.4,"fiber":4},{"food_name":"Egg omelette (2 eggs)","calories":180,"carbs":2,"protein":12,"fat":14,"quantity":"2 eggs","vitamin_a":260,"vitamin_c":0,"vitamin_d":2,"calcium":56,"iron":1.8,"fiber":0}]
+
+Example exercise input: "I ran for 30 minutes"
+Example exercise output: [{"food_name":"Running (30 minutes)","calories":-300,"carbs":0,"protein":0,"fat":0,"quantity":"30 minutes","vitamin_a":0,"vitamin_c":0,"vitamin_d":0,"calcium":0,"iron":0,"fiber":0}]`;
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${GOOGLE_API_KEY}`, {
       method: 'POST',
