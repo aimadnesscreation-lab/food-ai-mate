@@ -93,9 +93,21 @@ Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protei
     }
 
     const data = await response.json();
-    const content = data.candidates[0].content.parts[0].text;
-    
-    console.log('AI response:', content);
+    const candidate = data?.candidates?.[0];
+    const parts = candidate?.content?.parts;
+    let content = '';
+    if (Array.isArray(parts)) {
+      content = parts.map((p: any) => p?.text || '').join('').trim();
+    } else if (typeof candidate?.content === 'string') {
+      content = candidate.content;
+    }
+
+    console.log('AI raw data keys:', Object.keys(data || {}));
+    console.log('AI response text:', content);
+
+    if (!content) {
+      throw new Error('AI returned empty response');
+    }
     
     // Parse the JSON response
     let foodItems;
@@ -105,7 +117,7 @@ Example output: [{"food_name":"Roti (2 rotis)","calories":240,"carbs":40,"protei
       const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content;
       foodItems = JSON.parse(jsonStr.trim());
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error('Failed to parse AI response:', parseError, 'content:', content);
       throw new Error('Failed to parse nutrition data from AI');
     }
 
