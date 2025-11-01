@@ -14,6 +14,12 @@ interface FoodLogItemProps {
     protein: number;
     fat: number;
     quantity: string | null;
+    vitamin_a?: number;
+    vitamin_c?: number;
+    vitamin_d?: number;
+    calcium?: number;
+    iron?: number;
+    fiber?: number;
   };
   onRefresh: () => void;
 }

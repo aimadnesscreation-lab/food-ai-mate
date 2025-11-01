@@ -8,11 +8,13 @@ import { FoodLogItem } from "@/components/FoodLogItem";
 import { DailyTotals } from "@/components/DailyTotals";
 import { FoodInput } from "@/components/FoodInput";
 import { GoalsDialog } from "@/components/GoalsDialog";
+import { MicronutrientSummary } from "@/components/MicronutrientSummary";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { exportFoodLogsToCSV, importFoodLogsFromCSV } from "@/lib/csvUtils";
+import { calculateMicronutrientGoals } from "@/lib/micronutrientCalculator";
 
 interface FoodLog {
   id: string;
@@ -23,6 +25,12 @@ interface FoodLog {
   fat: number;
   quantity: string | null;
   logged_at: string;
+  vitamin_a: number;
+  vitamin_c: number;
+  vitamin_d: number;
+  calcium: number;
+  iron: number;
+  fiber: number;
 }
 
 const Index = () => {
@@ -45,6 +53,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [goalsDialogOpen, setGoalsDialogOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState({ age: null, height: null, current_weight: null });
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -93,9 +102,27 @@ const Index = () => {
   useEffect(() => {
     if (user) {
       fetchUserGoals();
+      fetchUserProfile();
       fetchFoodLogs();
     }
   }, [user, selectedDate]);
+
+  const fetchUserProfile = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('age, height, current_weight')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error fetching profile:', error);
+      return;
+    }
+
+    if (data) {
+      setUserProfile(data);
+    }
+  };
 
   const fetchUserGoals = async () => {
     const { data, error } = await supabase
@@ -213,13 +240,31 @@ const Index = () => {
         carbs: acc.carbs + log.carbs,
         protein: acc.protein + log.protein,
         fat: acc.fat + log.fat,
+        vitamin_a: acc.vitamin_a + (log.vitamin_a || 0),
+        vitamin_c: acc.vitamin_c + (log.vitamin_c || 0),
+        vitamin_d: acc.vitamin_d + (log.vitamin_d || 0),
+        calcium: acc.calcium + (log.calcium || 0),
+        iron: acc.iron + (log.iron || 0),
+        fiber: acc.fiber + (log.fiber || 0),
       }),
-      { calories: 0, carbs: 0, protein: 0, fat: 0 }
+      { 
+        calories: 0, 
+        carbs: 0, 
+        protein: 0, 
+        fat: 0,
+        vitamin_a: 0,
+        vitamin_c: 0,
+        vitamin_d: 0,
+        calcium: 0,
+        iron: 0,
+        fiber: 0,
+      }
     );
   };
 
   const totals = calculateTotals();
   const remainingCalories = userGoals.daily_calories - totals.calories;
+  const micronutrientGoals = calculateMicronutrientGoals(userProfile);
 
   const handleExportCSV = async () => {
     try {
@@ -344,6 +389,21 @@ const Index = () => {
           protein={{ current: totals.protein, goal: userGoals.daily_protein }}
           fat={{ current: totals.fat, goal: userGoals.daily_fat }}
         />
+
+        {/* Micronutrient Summary */}
+        {foodLogs.length > 0 && (
+          <MicronutrientSummary
+            totals={{
+              vitamin_a: totals.vitamin_a,
+              vitamin_c: totals.vitamin_c,
+              vitamin_d: totals.vitamin_d,
+              calcium: totals.calcium,
+              iron: totals.iron,
+              fiber: totals.fiber,
+            }}
+            goals={micronutrientGoals}
+          />
+        )}
 
         {/* Food Log */}
         <Card className="mb-6 p-4">

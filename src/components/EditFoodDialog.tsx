@@ -17,6 +17,12 @@ interface EditFoodDialogProps {
     protein: number;
     fat: number;
     quantity: string | null;
+    vitamin_a?: number;
+    vitamin_c?: number;
+    vitamin_d?: number;
+    calcium?: number;
+    iron?: number;
+    fiber?: number;
   };
   onSuccess: () => void;
 }
@@ -30,6 +36,12 @@ export const EditFoodDialog = ({ open, onOpenChange, foodLog, onSuccess }: EditF
     protein: foodLog.protein,
     fat: foodLog.fat,
     quantity: foodLog.quantity || "",
+    vitamin_a: foodLog.vitamin_a || 0,
+    vitamin_c: foodLog.vitamin_c || 0,
+    vitamin_d: foodLog.vitamin_d || 0,
+    calcium: foodLog.calcium || 0,
+    iron: foodLog.iron || 0,
+    fiber: foodLog.fiber || 0,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,6 +59,12 @@ export const EditFoodDialog = ({ open, onOpenChange, foodLog, onSuccess }: EditF
           protein: formData.protein,
           fat: formData.fat,
           quantity: formData.quantity || null,
+          vitamin_a: formData.vitamin_a,
+          vitamin_c: formData.vitamin_c,
+          vitamin_d: formData.vitamin_d,
+          calcium: formData.calcium,
+          iron: formData.iron,
+          fiber: formData.fiber,
         })
         .eq("id", foodLog.id);
 
@@ -144,6 +162,78 @@ export const EditFoodDialog = ({ open, onOpenChange, foodLog, onSuccess }: EditF
                   value={formData.fat}
                   onChange={(e) => setFormData({ ...formData, fat: Number(e.target.value) })}
                   required
+                  min="0"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="vitamin_a">Vitamin A (mcg)</Label>
+                <Input
+                  id="vitamin_a"
+                  type="number"
+                  step="0.1"
+                  value={formData.vitamin_a}
+                  onChange={(e) => setFormData({ ...formData, vitamin_a: Number(e.target.value) })}
+                  min="0"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="vitamin_c">Vitamin C (mg)</Label>
+                <Input
+                  id="vitamin_c"
+                  type="number"
+                  step="0.1"
+                  value={formData.vitamin_c}
+                  onChange={(e) => setFormData({ ...formData, vitamin_c: Number(e.target.value) })}
+                  min="0"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="vitamin_d">Vitamin D (mcg)</Label>
+                <Input
+                  id="vitamin_d"
+                  type="number"
+                  step="0.1"
+                  value={formData.vitamin_d}
+                  onChange={(e) => setFormData({ ...formData, vitamin_d: Number(e.target.value) })}
+                  min="0"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="calcium">Calcium (mg)</Label>
+                <Input
+                  id="calcium"
+                  type="number"
+                  step="0.1"
+                  value={formData.calcium}
+                  onChange={(e) => setFormData({ ...formData, calcium: Number(e.target.value) })}
+                  min="0"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="iron">Iron (mg)</Label>
+                <Input
+                  id="iron"
+                  type="number"
+                  step="0.1"
+                  value={formData.iron}
+                  onChange={(e) => setFormData({ ...formData, iron: Number(e.target.value) })}
+                  min="0"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="fiber">Fiber (g)</Label>
+                <Input
+                  id="fiber"
+                  type="number"
+                  step="0.1"
+                  value={formData.fiber}
+                  onChange={(e) => setFormData({ ...formData, fiber: Number(e.target.value) })}
                   min="0"
                 />
               </div>
